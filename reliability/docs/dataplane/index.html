@@ -1,0 +1,1314 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-7.3.6">
+    
+    
+      
+        <title>Data Plane - EKS Best Practices Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.a57b2b03.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.3f5d1f46.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+    
+      
+
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+  
+    
+    <script>function __prefix(e){return new URL("../../..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#eks-data-plane" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="EKS Best Practices Guides" class="md-header__button md-logo" aria-label="EKS Best Practices Guides" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            EKS Best Practices Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Data Plane
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        
+<a href="https://github.com/aws/aws-eks-best-practices/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    aws/aws-eks-best-practices
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="EKS Best Practices Guides" class="md-nav__button md-logo" aria-label="EKS Best Practices Guides" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    EKS Best Practices Guides
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/aws/aws-eks-best-practices/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    aws/aws-eks-best-practices
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1" type="checkbox" id="__nav_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_1">
+          Guides
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Guides" data-md-level="1">
+        <label class="md-nav__title" for="__nav_1">
+          <span class="md-nav__icon md-icon"></span>
+          Guides
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2">
+          Security
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Security" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Security
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security/docs/" class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security/docs/iam/" class="md-nav__link">
+        Identity and Access Management
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security/docs/pods/" class="md-nav__link">
+        Pod Security
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security/docs/multitenancy/" class="md-nav__link">
+        Multi-tenancy
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security/docs/detective/" class="md-nav__link">
+        Detective Controls
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security/docs/network/" class="md-nav__link">
+        Network Security
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security/docs/data/" class="md-nav__link">
+        Data Encryption and Secrets Management
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security/docs/runtime/" class="md-nav__link">
+        Runtime Security
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security/docs/hosts/" class="md-nav__link">
+        Infrastructure Security
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security/docs/compliance/" class="md-nav__link">
+        Regulatory Compliance
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security/docs/incidents/" class="md-nav__link">
+        Incident Response and Forensics
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security/docs/image/" class="md-nav__link">
+        Image Security
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3">
+          Cluster Autoscaling
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Cluster Autoscaling" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Cluster Autoscaling
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cluster-autoscaling/" class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4">
+          Reliability
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Reliability" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Reliability
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../application/" class="md-nav__link">
+        Applications
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../controlplane/" class="md-nav__link">
+        Control Plane
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Data Plane
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Data Plane
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#recommendations" class="md-nav__link">
+    Recommendations
+  </a>
+  
+    <nav class="md-nav" aria-label="Recommendations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#use-ec2-auto-scaling-groups-to-create-worker-nodes" class="md-nav__link">
+    Use EC2 Auto Scaling Groups to create worker nodes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-kubernetes-cluster-autoscaler-to-scale-nodes" class="md-nav__link">
+    Use Kubernetes Cluster Autoscaler to scale nodes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configure-over-provisioning-with-cluster-autoscaler" class="md-nav__link">
+    Configure over-provisioning with Cluster Autoscaler
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-cluster-autoscaler-with-multiple-auto-scaling-groups" class="md-nav__link">
+    Using Cluster Autoscaler with multiple Auto Scaling Groups
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-cluster-autoscaler-with-local-storage" class="md-nav__link">
+    Using Cluster Autoscaler with local storage
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spread-worker-nodes-and-workload-across-multiple-azs" class="md-nav__link">
+    Spread worker nodes and workload across multiple AZs
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ensure-capacity-in-each-az-when-using-ebs-volumes" class="md-nav__link">
+    Ensure capacity in each AZ when using EBS volumes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-node-problem-detector" class="md-nav__link">
+    Run node-problem-detector
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reserving-resources-for-system-and-kubernetes-daemons" class="md-nav__link">
+    Reserving resources for system and Kubernetes daemons
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implement-qos" class="md-nav__link">
+    Implement QoS
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configure-resource-quotas-for-namespaces" class="md-nav__link">
+    Configure resource quotas for namespaces
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limit-container-resource-usage-within-a-namespace" class="md-nav__link">
+    Limit container resource usage within a namespace
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../networkmanagement/" class="md-nav__link">
+        Network
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5">
+          Windows Containers (beta)
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Windows Containers (beta)" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Windows Containers (beta)
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../windows/docs/ami/" class="md-nav__link">
+        AMI Management
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../windows/docs/gmsa/" class="md-nav__link">
+        gMSA for Windows Containers
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../windows/docs/hardening/" class="md-nav__link">
+        Windows Server Hardening
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../windows/docs/heterogeneous/" class="md-nav__link">
+        Running Mixed Workloads
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../windows/docs/images/" class="md-nav__link">
+        Scanning Windows Images
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../windows/docs/licensing/" class="md-nav__link">
+        Windows Versions and Licensing
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../windows/docs/logging/" class="md-nav__link">
+        Logging
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../windows/docs/monitoring/" class="md-nav__link">
+        Monitoring Windows Containers
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../windows/docs/networking/" class="md-nav__link">
+        Windows Networking
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../windows/docs/oom/" class="md-nav__link">
+        Memory and Systems Management
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../windows/docs/patching/" class="md-nav__link">
+        Infrastructure Management
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../windows/docs/scheduling/" class="md-nav__link">
+        Scheduling
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../windows/docs/security/" class="md-nav__link">
+        Pod Security for Windows Containers
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../windows/docs/storage/" class="md-nav__link">
+        Storage Options
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#recommendations" class="md-nav__link">
+    Recommendations
+  </a>
+  
+    <nav class="md-nav" aria-label="Recommendations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#use-ec2-auto-scaling-groups-to-create-worker-nodes" class="md-nav__link">
+    Use EC2 Auto Scaling Groups to create worker nodes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-kubernetes-cluster-autoscaler-to-scale-nodes" class="md-nav__link">
+    Use Kubernetes Cluster Autoscaler to scale nodes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configure-over-provisioning-with-cluster-autoscaler" class="md-nav__link">
+    Configure over-provisioning with Cluster Autoscaler
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-cluster-autoscaler-with-multiple-auto-scaling-groups" class="md-nav__link">
+    Using Cluster Autoscaler with multiple Auto Scaling Groups
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-cluster-autoscaler-with-local-storage" class="md-nav__link">
+    Using Cluster Autoscaler with local storage
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spread-worker-nodes-and-workload-across-multiple-azs" class="md-nav__link">
+    Spread worker nodes and workload across multiple AZs
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ensure-capacity-in-each-az-when-using-ebs-volumes" class="md-nav__link">
+    Ensure capacity in each AZ when using EBS volumes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-node-problem-detector" class="md-nav__link">
+    Run node-problem-detector
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reserving-resources-for-system-and-kubernetes-daemons" class="md-nav__link">
+    Reserving resources for system and Kubernetes daemons
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implement-qos" class="md-nav__link">
+    Implement QoS
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configure-resource-quotas-for-namespaces" class="md-nav__link">
+    Configure resource quotas for namespaces
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limit-container-resource-usage-within-a-namespace" class="md-nav__link">
+    Limit container resource usage within a namespace
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/aws/aws-eks-best-practices/edit/master/docs/reliability/docs/dataplane.md" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
+                
+                <h1 id="eks-data-plane">EKS Data Plane<a class="headerlink" href="#eks-data-plane" title="Permanent link">&para;</a></h1>
+<p>To operate high-available and resilient applications, you need a highly-available and resilient data plane. An elastic data plane ensures that Kubernetes can scale and heal your applications automatically. A resilient data plane consists of two or more worker nodes, can grow and shrink with the workload, and automatically recover from failures.</p>
+<p>You have two choices for worker nodes with EKS: <a href="https://docs.aws.amazon.com/eks/latest/userguide/worker.html">EC2 instances</a> and <a href="https://docs.aws.amazon.com/eks/latest/userguide/fargate.html">Fargate</a>. If you choose EC2 instances, you can manage the worker nodes yourself or use <a href="https://docs.aws.amazon.com/eks/latest/userguide/managed-node-groups.html">EKS managed node groups</a>. You can have a cluster with a mix of managed, self-managed worker nodes, and Fargate. </p>
+<p>EKS on Fargate offers the easiest path to a resilient data plane. Fargate runs each Pod in an isolated compute environment. Each Pod running on Fargate gets its own worker node. Fargate automatically scales the data plane as Kubernetes scales pods. You can scale both the data plane and your workload by using the <a href="https://docs.aws.amazon.com/eks/latest/userguide/horizontal-pod-autoscaler.html">horizontal pod autoscaler</a>.</p>
+<p>The preferred way to scale EC2 worker nodes is by using <a href="https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/cloudprovider/aws/README.md">Kubernetes Cluster Autoscaler</a>, <a href="https://docs.aws.amazon.com/autoscaling/ec2/userguide/AutoScalingGroup.html">EC2 Auto Scaling groups</a> or community projects like <a href="https://github.com/atlassian/escalator">Atlassian’s Esclator</a>.</p>
+<h2 id="recommendations">Recommendations<a class="headerlink" href="#recommendations" title="Permanent link">&para;</a></h2>
+<h3 id="use-ec2-auto-scaling-groups-to-create-worker-nodes">Use EC2 Auto Scaling Groups to create worker nodes<a class="headerlink" href="#use-ec2-auto-scaling-groups-to-create-worker-nodes" title="Permanent link">&para;</a></h3>
+<p>It is a best practice to create worker nodes using EC2 Auto Scaling groups instead of creating individual EC2 instances and joining them to the cluster. Auto Scaling Groups will automatically replace any terminated or failed nodes ensuring that the cluster always has the capacity to run your workload. </p>
+<h3 id="use-kubernetes-cluster-autoscaler-to-scale-nodes">Use Kubernetes Cluster Autoscaler to scale nodes<a class="headerlink" href="#use-kubernetes-cluster-autoscaler-to-scale-nodes" title="Permanent link">&para;</a></h3>
+<p>Cluster Autoscaler adjusts the size of the data plane when there are pods that cannot be run because the cluster has insufficient resources, and adding another worker node would help. Although Cluster Autoscaler is a reactive process, it waits until pods are in <em>Pending</em> state due to insufficient capacity in the cluster. When such an event occurs, it adds EC2 instances to the cluster. Whenever the cluster runs out of capacity, new replicas - or new pods - will be unavailable (<em>in Pending state</em>) until worker nodes are added. This delay may impact your applications' reliability if the data plane cannot scale fast enough to meet the demands of the workload. If a worker node is consistently underutilized and all of its pods can be scheduled on other worker nodes, Cluster Autoscaler terminates it.</p>
+<h3 id="configure-over-provisioning-with-cluster-autoscaler">Configure over-provisioning with Cluster Autoscaler<a class="headerlink" href="#configure-over-provisioning-with-cluster-autoscaler" title="Permanent link">&para;</a></h3>
+<p>Cluster Autoscaler triggers a scale-up of the data-plane when Pods in the cluster are already <em>Pending</em>. Hence, there may be a delay between the time your application needs more replicas, and when it, in fact, gets more replicas. An option to account for this possible delay is through adding more than required replicas, inflating the number of replicas for the application. </p>
+<p>Another pattern that Cluster Autoscaler recommends uses <a href="https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/FAQ.md#how-can-i-configure-overprovisioning-with-cluster-autoscaler"><em>pause</em> Pods and the Priority Preemption feature</a>. The <em>pause Pod</em> runs a <a href="https://github.com/kubernetes/kubernetes/tree/master/build/pause">pause container</a>, which as the name suggests, does nothing but acts as a placeholder for compute capacity that can be used by other Pods in your cluster. Because it runs with a <em>very low assigned priority</em>, the pause Pod gets evicted from the node when another Pod needs to be created, and the cluster doesn’t have available capacity. The Kubernetes Scheduler notices the eviction of the pause Pod and tries to reschedule it. But since the cluster is running at capacity, the pause Pod remains <em>Pending</em>, to which the Cluster Autoscaler reacts by adding nodes. </p>
+<p>A Helm chart is available to install <a href="https://github.com/helm/charts/tree/master/stable/cluster-overprovisioner">cluster overprovisioner</a>.</p>
+<h3 id="using-cluster-autoscaler-with-multiple-auto-scaling-groups">Using Cluster Autoscaler with multiple Auto Scaling Groups<a class="headerlink" href="#using-cluster-autoscaler-with-multiple-auto-scaling-groups" title="Permanent link">&para;</a></h3>
+<p>Run the Cluster Autoscaler with the <code>--node-group-auto-discovery</code> flag enabled. Doing so will allow the Cluster Autoscaler to find all autoscaling groups that include a particular defined tag and prevents the need to define and maintain each autoscaling group in the manifest.</p>
+<h3 id="using-cluster-autoscaler-with-local-storage">Using Cluster Autoscaler with local storage<a class="headerlink" href="#using-cluster-autoscaler-with-local-storage" title="Permanent link">&para;</a></h3>
+<p>By default, the Cluster Autoscaler does not scale-down nodes that have pods deployed with local storage attached. Set the <code>--skip-nodes-with-local-storage</code> flag to false to allow Cluster Autoscaler to scale-down these nodes.</p>
+<h3 id="spread-worker-nodes-and-workload-across-multiple-azs">Spread worker nodes and workload across multiple AZs<a class="headerlink" href="#spread-worker-nodes-and-workload-across-multiple-azs" title="Permanent link">&para;</a></h3>
+<p>You can protect your workloads from failures in an individual AZ by running worker nodes and pods in multiple AZs. You can control the AZ the worker nodes are created in using the subnets you create the nodes in.</p>
+<p>You can set pod anti-affinity rules to schedule pods across multiple AZs. The manifest below informs Kubernetes scheduler to <em>prefer</em> scheduling pods in distinct AZs. </p>
+<div class="codehilite"><pre><span></span><code><span class="n">apiVersion</span><span class="o">:</span> <span class="n">apps</span><span class="o">/</span><span class="n">v1</span>
+<span class="n">kind</span><span class="o">:</span> <span class="n">Deployment</span>
+<span class="n">metadata</span><span class="o">:</span>
+  <span class="n">name</span><span class="o">:</span> <span class="n">web</span><span class="o">-</span><span class="n">server</span>
+  <span class="n">labels</span><span class="o">:</span>
+    <span class="n">app</span><span class="o">:</span> <span class="n">web</span><span class="o">-</span><span class="n">server</span>
+<span class="n">spec</span><span class="o">:</span>
+  <span class="n">replicas</span><span class="o">:</span> <span class="mi">4</span>
+  <span class="n">selector</span><span class="o">:</span>
+    <span class="n">matchLabels</span><span class="o">:</span>
+      <span class="n">app</span><span class="o">:</span> <span class="n">web</span><span class="o">-</span><span class="n">server</span>
+  <span class="n">template</span><span class="o">:</span>
+    <span class="n">metadata</span><span class="o">:</span>
+      <span class="n">labels</span><span class="o">:</span>
+        <span class="n">app</span><span class="o">:</span> <span class="n">web</span><span class="o">-</span><span class="n">server</span>
+    <span class="n">spec</span><span class="o">:</span>
+      <span class="n">affinity</span><span class="o">:</span>
+        <span class="n">podAntiAffinity</span><span class="o">:</span>
+          <span class="n">preferredDuringSchedulingIgnoredDuringExecution</span><span class="o">:</span>
+          <span class="o">-</span> <span class="n">podAffinityTerm</span><span class="o">:</span>
+              <span class="n">labelSelector</span><span class="o">:</span>
+                <span class="n">matchExpressions</span><span class="o">:</span>
+                <span class="o">-</span> <span class="n">key</span><span class="o">:</span> <span class="n">app</span>
+                  <span class="n">operator</span><span class="o">:</span> <span class="n">In</span>
+                  <span class="n">values</span><span class="o">:</span>
+                  <span class="o">-</span> <span class="n">web</span><span class="o">-</span><span class="n">server</span>
+              <span class="n">topologyKey</span><span class="o">:</span> <span class="n">failure</span><span class="o">-</span><span class="n">domain</span><span class="o">.</span><span class="na">beta</span><span class="o">.</span><span class="na">kubernetes</span><span class="o">.</span><span class="na">io</span><span class="o">/</span><span class="n">zone</span>
+            <span class="n">weight</span><span class="o">:</span> <span class="mi">100</span>
+      <span class="n">containers</span><span class="o">:</span>
+      <span class="o">-</span> <span class="n">name</span><span class="o">:</span> <span class="n">web</span><span class="o">-</span><span class="n">app</span>
+        <span class="n">image</span><span class="o">:</span> <span class="n">nginx</span>
+</code></pre></div>
+
+<p>!!! warning Do not require that pods be scheduled across distinct AZs otherwise, the number of pods in a deployment will never exceed the number of AZs. </p>
+<p>With Kubernetes 1.18+, you can use <a href="https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/#spread-constraints-for-pods">Spread Constraints for Pods</a> to schedule pods across multiple AZs.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">apiVersion</span><span class="o">:</span> <span class="n">apps</span><span class="o">/</span><span class="n">v1</span>
+<span class="n">kind</span><span class="o">:</span> <span class="n">Deployment</span>
+<span class="n">metadata</span><span class="o">:</span>
+  <span class="n">name</span><span class="o">:</span> <span class="n">web</span><span class="o">-</span><span class="n">server</span>
+  <span class="n">labels</span><span class="o">:</span>
+    <span class="n">app</span><span class="o">:</span> <span class="n">web</span><span class="o">-</span><span class="n">server</span>
+<span class="n">spec</span><span class="o">:</span>
+  <span class="n">replicas</span><span class="o">:</span> <span class="mi">3</span>
+  <span class="n">template</span><span class="o">:</span>
+    <span class="n">metadata</span><span class="o">:</span>
+      <span class="n">labels</span><span class="o">:</span>
+        <span class="n">app</span><span class="o">:</span> <span class="n">web</span><span class="o">-</span><span class="n">server</span>
+    <span class="n">spec</span><span class="o">:</span>
+      <span class="n">topologySpreadConstraints</span><span class="o">:</span>
+        <span class="o">-</span> <span class="n">maxSkew</span><span class="o">:</span> <span class="mi">1</span>
+          <span class="n">whenUnsatisfiable</span><span class="o">:</span> <span class="n">DoNotSchedule</span>
+          <span class="n">topologyKey</span><span class="o">:</span> <span class="n">failure</span><span class="o">-</span><span class="n">domain</span><span class="o">.</span><span class="na">beta</span><span class="o">.</span><span class="na">kubernetes</span><span class="o">.</span><span class="na">io</span><span class="o">/</span><span class="n">zone</span>
+          <span class="n">labelSelector</span><span class="o">:</span>
+            <span class="n">matchLabels</span><span class="o">:</span>
+              <span class="n">app</span><span class="o">:</span> <span class="n">web</span><span class="o">-</span><span class="n">server</span>
+      <span class="n">containers</span><span class="o">:</span>
+      <span class="o">-</span> <span class="n">name</span><span class="o">:</span> <span class="n">web</span><span class="o">-</span><span class="n">app</span>
+        <span class="n">image</span><span class="o">:</span> <span class="n">nginx</span>
+</code></pre></div>
+
+<h3 id="ensure-capacity-in-each-az-when-using-ebs-volumes">Ensure capacity in each AZ when using EBS volumes<a class="headerlink" href="#ensure-capacity-in-each-az-when-using-ebs-volumes" title="Permanent link">&para;</a></h3>
+<p>If you use <a href="https://docs.aws.amazon.com/eks/latest/userguide/ebs-csi.html">Amazon EBS to provide Persistent Volumes</a>, then you need to ensure that the pods and associated EBS volume are located in the same AZ. At the time of writing, EBS volumes are only available within a single AZ. A Pod cannot access EBS-backed persistent volumes located in a different AZ. Kubernetes <a href="https://kubernetes.io/docs/reference/kubernetes-api/labels-annotations-taints/#topologykubernetesiozone">scheduler knows which AZ a worker node</a> is located in. Kubernetes will always schedule a Pod that requires an EBS volume in the same AZ as the volume. However, if there are no worker nodes available in the AZ where the volume is located, then the Pod cannot be scheduled. </p>
+<p>Create Auto Scaling Group for each AZ with enough capacity to ensure that the cluster always has capacity to schedule pods in the same AZ as the EBS volumes they need. In addition, you should enable the <code>--balance-similar-node-groups</code> feature in Cluster Autoscaler.</p>
+<p>If you are running an application that uses EBS volume but has no requirements to be highly available, then you can restrict the deployment of the application to a single AZ. In EKS, worker nodes are automatically added <code>failure-domain.beta.kubernetes.io/zone</code> label, which contains the name of the AZ. You can see the labels attached to your nodes by running <code>kubectl get nodes --show-labels</code>. More information about built-in node labels is available <a href="https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#built-in-node-labels">here</a>. You can use node selectors to schedule a pod in a particular AZ. </p>
+<p>In the example below, the pod will only be scheduled in <code>us-west-2c</code> AZ:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">apiVersion</span><span class="o">:</span> <span class="n">v1</span>
+<span class="n">kind</span><span class="o">:</span> <span class="n">Pod</span>
+<span class="n">metadata</span><span class="o">:</span>
+  <span class="n">name</span><span class="o">:</span> <span class="n">single</span><span class="o">-</span><span class="n">az</span><span class="o">-</span><span class="n">pod</span>
+<span class="n">spec</span><span class="o">:</span>
+  <span class="n">affinity</span><span class="o">:</span>
+    <span class="n">nodeAffinity</span><span class="o">:</span>
+      <span class="n">requiredDuringSchedulingIgnoredDuringExecution</span><span class="o">:</span>
+        <span class="n">nodeSelectorTerms</span><span class="o">:</span>
+        <span class="o">-</span> <span class="n">matchExpressions</span><span class="o">:</span>
+          <span class="o">-</span> <span class="n">key</span><span class="o">:</span> <span class="n">failure</span><span class="o">-</span><span class="n">domain</span><span class="o">.</span><span class="na">beta</span><span class="o">.</span><span class="na">kubernetes</span><span class="o">.</span><span class="na">io</span><span class="o">/</span><span class="n">zone</span>
+            <span class="n">operator</span><span class="o">:</span> <span class="n">In</span>
+            <span class="n">values</span><span class="o">:</span>
+            <span class="o">-</span> <span class="n">us</span><span class="o">-</span><span class="n">west</span><span class="o">-</span><span class="mi">2</span><span class="n">c</span>
+  <span class="n">containers</span><span class="o">:</span>
+  <span class="o">-</span> <span class="n">name</span><span class="o">:</span> <span class="n">single</span><span class="o">-</span><span class="n">az</span><span class="o">-</span><span class="n">container</span>
+    <span class="n">image</span><span class="o">:</span> <span class="n">kubernetes</span><span class="o">/</span><span class="n">pause</span>
+</code></pre></div>
+
+<p>Persistent volumes (backed by EBS) are also automatically labeled with the name of AZ; you can see which AZ your persistent volume belongs to by running <code>kubectl get pv -L topology.ebs.csi.aws.com/zone</code>. When a pod is created and claims a volume, Kubernetes will schedule the Pod on a node in the same AZ as the volume. </p>
+<p>Consider this scenario; you have an EKS cluster with one node group. This node group has three worker nodes spread across three AZs. You have an application that uses an EBS-backed Persistent Volume. When you create this application and the corresponding volume, its Pod gets created in the first of the three AZs. Then, the worker node that runs this Pod becomes unhealthy and subsequently unavailable for use. Cluster Autoscaler will replace the unhealthy node with a new worker node; however, because the autoscaling group spans across three AZs, the new worker node may get launched in the second or the third AZ, but not in the first AZ as the situation demands. As the AZ-constrained EBS volume only exists in the first AZ, but there are no worker nodes available in that AZ, the Pod cannot be scheduled. Therefore, you should create one node group in each AZ, so there is always enough capacity available to run pods that cannot be scheduled in other AZs. </p>
+<p>Alternatively, you can use <a href="https://github.com/kubernetes-sigs/aws-efs-csi-driver">EFS</a> can simplify cluster autoscaling when running applications that need persistent storage. Clients can access EFS file systems concurrently from all the AZs in the region. Even if a Pod using EFS-backed Persistent Volume gets terminated and gets scheduled in different AZ, it will be able to mount the volume.</p>
+<h3 id="run-node-problem-detector">Run node-problem-detector<a class="headerlink" href="#run-node-problem-detector" title="Permanent link">&para;</a></h3>
+<p>Failures in worker nodes can impact the availability of your applications. <a href="https://github.com/kubernetes/node-problem-detector">node-problem-detector</a> is a Kubernetes add-on that you can install in your cluster to detect worker node issues. You can use a <a href="https://github.com/kubernetes/node-problem-detector#remedy-systems">npd’s remedy system</a> to drain and terminate the node automatically.</p>
+<h3 id="reserving-resources-for-system-and-kubernetes-daemons">Reserving resources for system and Kubernetes daemons<a class="headerlink" href="#reserving-resources-for-system-and-kubernetes-daemons" title="Permanent link">&para;</a></h3>
+<p>You can improve worker nodes' stability by <a href="https://kubernetes.io/docs/tasks/administer-cluster/reserve-compute-resources/">reserving compute capacity for the operating system and Kubernetes daemons</a>. Pods  - especially ones without <code>limits</code> declared - can saturate system resources putting nodes in a situation where operating system processes and Kubernetes daemons (<code>kubelet</code>, container runtime, etc.) compete with pods for system resources. You can use <code>kubelet</code> flags <code>--system-reserved</code> and <code>--kube-reserved</code> to reserve resources for system process (<code>udev</code>, <code>sshd</code>, etc.) and Kubernetes daemons respectively. </p>
+<p>If you use the <a href="https://docs.aws.amazon.com/eks/latest/userguide/eks-optimized-ami.html">EKS-optimized Linux AMI</a>, the CPU, memory, and storage are reserved for the system and Kubernetes daemons by default. When worker nodes based on this AMI launch, EC2 user-data is configured to trigger the <a href="https://github.com/awslabs/amazon-eks-ami/blob/master/files/bootstrap.sh"><code>bootstrap.sh</code> script</a>. This script calculates CPU and memory reservations based on the number of CPU cores and total memory available on the EC2 instance. The calculated values are written to the <code>KubeletConfiguration</code> file located at <code>/etc/kubernetes/kubelet/kubelet-config.json</code>. </p>
+<p>You may need to increase the system resource reservation if you run custom daemons on the node and the amount of CPU and memory reserved by default is insufficient. </p>
+<p><code>eksctl</code> offers the easiest way to customize <a href="https://eksctl.io/usage/customizing-the-kubelet/">resource reservation for system and Kubernetes daemons</a>. </p>
+<h3 id="implement-qos">Implement QoS<a class="headerlink" href="#implement-qos" title="Permanent link">&para;</a></h3>
+<p>For critical applications, consider defining <code>requests</code>=<code>limits</code> for the container in the Pod. This will ensure that the container will not be killed if another Pod requests resources.</p>
+<p>It is a best practice to implement CPU and memory limits for all containers as it prevents a container inadvertently consuming system resources impacting the availability of other co-located processes.</p>
+<h3 id="configure-resource-quotas-for-namespaces">Configure resource quotas for namespaces<a class="headerlink" href="#configure-resource-quotas-for-namespaces" title="Permanent link">&para;</a></h3>
+<p>Namespaces are intended for use in environments with many users spread across multiple teams, or projects. They provide a scope for names and are a way to divide cluster resources between multiple teams, projects, workloads. You can limit the aggregate resource consumption in a namespace. The <a href="https://kubernetes.io/docs/concepts/policy/resource-quotas/"><code>ResourceQuota</code></a> object can limit the quantity of objects that can be created in a namespace by type, as well as the total amount of compute resources that may be consumed by resources in that project. You can limit the total sum of storage and/or compute (CPU and memory) resources that can be requested in a given namespace.</p>
+<blockquote>
+<p>If resource quota is enabled for a namespace for compute resources like CPU and memory, users must specify requests or limits for each container in that namespace.</p>
+</blockquote>
+<p>Consider configuring quotas for each namespace. Consider using <code>LimitRanges</code> to automatically apply preconfigured limits to containers within a namespaces. </p>
+<h3 id="limit-container-resource-usage-within-a-namespace">Limit container resource usage within a namespace<a class="headerlink" href="#limit-container-resource-usage-within-a-namespace" title="Permanent link">&para;</a></h3>
+<p>Resource Quotas help limit the amount of resources a namespace can use. The <a href="https://kubernetes.io/docs/concepts/policy/limit-range/"><code>LimitRange</code> object</a> can help you implement minimum and maximum resources a container can request. Using <code>LimitRange</code> you can set a default request and limits for containers, which is helpful if setting compute resource limits is not a standard practice in your organization. As the name suggests, <code>LimitRange</code> can enforce minimum and maximum compute resources usage per Pod or Container in a namespace. As well as, enforce minimum and maximum storage request per PersistentVolumeClaim in a namespace.</p>
+<p>Consider using <code>LimitRange</code> in conjunction with <code>ResourceQuota</code> to enforce limits at a container as well as namespace level. Setting these limits will ensure that a container or a namespace does not impinge on resources used by other tenants in the cluster. </p>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+        
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        
+        <a href="../controlplane/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Control Plane" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Control Plane
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../networkmanagement/" class="md-footer__link md-footer__link--next" aria-label="Next: Network" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Network
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        
+          Made with
+          <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+            Material for MkDocs
+          </a>
+        
+        
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../assets/javascripts/workers/search.fcfe8b6d.min.js", "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.b1047164.min.js"></script>
+      
+    
+  </body>
+</html>
